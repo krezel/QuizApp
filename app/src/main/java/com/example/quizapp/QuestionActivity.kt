@@ -1,16 +1,14 @@
 package com.example.quizapp
 
-import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import com.example.quizapp.databinding.ActivityQuestionBinding
 import kotlinx.coroutines.*
-import java.util.Random
 
 
 class QuestionActivity : AppCompatActivity() {
@@ -43,8 +41,8 @@ class QuestionActivity : AppCompatActivity() {
         @OptIn(DelicateCoroutinesApi::class)
         suspend fun buttonAnswer(buttonList: List<AppCompatImageButton>) {
             val listQuestion = dao.getQuestion()
+            val listQuestionWithAnswers = dao.getQuestionWithAnswers(listQuestion.first())
             for (i in buttonList.indices) {
-                val listQuestionWithAnswers = dao.getQuestionWithAnswers(listQuestion.first())
                 val isCorrect = listQuestionWithAnswers[0].answers[i].correctAnswer
                 buttonList[i].setOnClickListener {
                     for (btn in buttonList)
@@ -56,12 +54,13 @@ class QuestionActivity : AppCompatActivity() {
                     } else{
                         buttonList[i].background.colorFilter =
                             BlendModeColorFilter(Color.parseColor("#fc0328"), BlendMode.COLOR)
-                    }
-                }
-                GlobalScope.launch {
-                    delay(3000L)
-                    if (isCorrect) {
-                        buttonList[i].background.colorFilter = BlendModeColorFilter(Color.parseColor("#03fc0b"), BlendMode.COLOR)
+                        runBlocking {
+                            for (m in buttonList.indices){
+                                val correct = listQuestionWithAnswers[0].answers[m].correctAnswer
+                                if (correct)
+                                buttonList[m].background.colorFilter = BlendModeColorFilter(Color.parseColor("#03fc0b"), BlendMode.COLOR)
+                            }
+                        }
                     }
                 }
             }
