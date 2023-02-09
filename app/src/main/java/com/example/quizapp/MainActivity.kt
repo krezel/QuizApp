@@ -21,19 +21,59 @@ class MainActivity : AppCompatActivity() {
             Intent(this,QuestionActivity::class.java).also {
                 startActivity(it)
             }
+            GlobalScope.launch(Dispatchers.IO){
+                //val dao = QuestionDatabase.getInstance(this@MainActivity).questionDao
+                //dao.deleteQ()
+                //dao.deleteA()
+                loadDatabase()
+            }
         }
     }
     suspend fun loadDatabase(){
         val dao = QuestionDatabase.getInstance(this).questionDao
-        val pytanie = Questions("Ile mam lat?")
-        val odpowiedz1 = Answers("23",true,"Ile mam lat?")
-        val odpowiedz2 = Answers("21",false,"Ile mam lat?")
-        val odpowiedz3 = Answers("22",false,"Ile mam lat?")
-        val odpowiedz4 = Answers("24",false,"Ile mam lat?")
-        dao.insertQuestion(pytanie)
-        dao.insertAnswer(odpowiedz1)
-        dao.insertAnswer(odpowiedz2)
-        dao.insertAnswer(odpowiedz3)
-        dao.insertAnswer(odpowiedz4)
+        val pytanie2 = Questions("Ile to 5+12")
+        val listAnswer2 = listOf(
+            Answers("15",false,"Ile to 5+12"),
+            Answers("17",true,"Ile to 5+12"),
+            Answers("14",false,"Ile to 5+12"),
+            Answers("18",false,"Ile to 5+12")
+        )
+        dao.insertQuestion(pytanie2)
+        for (answer in listAnswer2)
+            dao.insertAnswer(answer)
+
+        val pytanie3 = Questions("Jakie miasto jest stolicą Polski?")
+        val listAnswer3 = listOf(
+            Answers("Warszawa",true,"Jakie miasto jest stolicą Polski?"),
+            Answers("Łódź",false,"Jakie miasto jest stolicą Polski?"),
+            Answers("Poznań",false,"Jakie miasto jest stolicą Polski?"),
+            Answers("Wrocław",false,"Jakie miasto jest stolicą Polski?")
+        )
+        dao.insertQuestion(pytanie3)
+        for (answer in listAnswer3)
+            dao.insertAnswer(answer)
+
+        val pytanie4 = Questions("Który makroskładnik jest budulcem mięśni?")
+        val listAnswer4 = listOf(
+            Answers("Węglowodany",false,"Który makroskładnik jest budulcem mięśni?"),
+            Answers("Tłuszcze",false,"Który makroskładnik jest budulcem mięśni?"),
+            Answers("Białka",true,"Który makroskładnik jest budulcem mięśni?"),
+            Answers("Cukry",false,"Który makroskładnik jest budulcem mięśni?")
+        )
+        dao.insertQuestion(pytanie4)
+        for (answer in listAnswer4)
+            dao.insertAnswer(answer)
+
+        val pytanie5 = Questions("Ile nóg ma kot?")
+        val listAnswer5 = listOf(
+            Answers("6",false,"Ile nóg ma kot?"),
+            Answers("4",true,"Ile nóg ma kot?"),
+            Answers("2",false,"Ile nóg ma kot?"),
+            Answers("3",false,"Ile nóg ma kot?")
+        )
+        dao.insertQuestion(pytanie5)
+        for (answer in listAnswer5)
+            dao.insertAnswer(answer)
+
     }
 }
